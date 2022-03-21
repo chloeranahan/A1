@@ -41,7 +41,8 @@ Py = ymax*rand(Np,1);
 % Vx = V*cos(theta);
 
 Vy = V*(rand(Np,1)-0.5); %initial velocities
-Vx = V*(rand(Np,1)-0.5); %-0.5 added so electrons have a chance at having a positive or negative velocity
+Vx = sqrt((V^2)-(Vy.^2));
+%Vx = V*(rand(Np,1)-0.5); %-0.5 added so electrons have a chance at having a positive or negative velocity
 
 dt = 0.05*(ymax/V); %time step
 

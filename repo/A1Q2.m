@@ -1,3 +1,4 @@
+clear
 m0 = 9.1093837015E-31;
 mn = 0.26*m0;
 T = 300;
@@ -13,7 +14,7 @@ V = vth;
 xmax = 200E-9; %max positions
 ymax = 100E-9;
 
-Np = 1000; % # particles, want 1000-10000
+Np = 10000; % # particles, want 1000-10000
 Nplot = 14;
 Px = xmax*rand(Np,1); %initial positions
 Py = ymax*rand(Np,1);
@@ -22,7 +23,8 @@ Px1 = Px;
 Py1 = Py;
 
 Vy = V*(randn(Np,1)-0.5); %initial velocities
-Vx = V*(randn(Np,1)-0.5); %-0.5 added so electrons have a chance at having a positive or negative velocity
+Vx = sqrt((V^2)-(Vy.^2));
+%Vx = V*(randn(Np,1)-0.5); %-0.5 added so electrons have a chance at having a positive or negative velocity
 
 dt = 0.01*(ymax/V); %time step
 a = 1; %no acceleration
@@ -53,11 +55,11 @@ while sum(inbox) > 0
 end
     
    
-figPlot = figure (2);
-h = histogram(sqrt(Vx.^2 + Vy.^2),50);
-title('Maxwell-Boltzmann Distribution')
-xlabel('Velocity (m/s)')
-ylabel('Number of Particles')
+% figPlot = figure (2);
+% h = histogram(sqrt(Vx.^2 + Vy.^2),50);
+% title('Maxwell-Boltzmann Distribution')
+% xlabel('Velocity (m/s)')
+% ylabel('Number of Particles')
 
     
 nmPaths = 0;
@@ -82,7 +84,8 @@ for i = 1:tstop
     Vy(iy) = -Vy(iy);
     
     Psc = 1 - exp(-(dt/tmn1));
-    std = sqrt((kB*T)/mn);
+    std = vth/(sqrt(2));
+    %std = sqrt((kB*T)/mn);
     
     isc = Psc > rand(Np,1);
     Vx = Vx + a*dt;
@@ -134,15 +137,21 @@ for i = 1:tstop
     title(sprintf('T_S_i = %.3d',TSi))
     
         
-    figure(3)
+    figure(2)
     xlabel('Time (s)')
     ylabel('Temperature (K)')
     hold on
-    plot(i,TSi,'go')
+    plot(i,real(TSi),'go')
 
     pause(0.001)
 end
 
 avgmfp = PathDistSum/nmPaths;
 tmn2 = avgmfp/vth;
+
+figPlot = figure (3);
+h = histogram(real(sqrt(Vx.^2 + Vy.^2)),50);
+title('Maxwell-Boltzmann Distribution')
+xlabel('Velocity (m/s)')
+ylabel('Number of Particles')
 

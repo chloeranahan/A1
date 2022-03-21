@@ -28,6 +28,7 @@ else
 end
 
 Py = ymax*rand(Np,1);
+%Vy = sqrt((V^2)-(Vx.^2));
 Vy = V*(randn(Np,1)-0.5); %initial velocities
 
 dt = 0.01*(ymax/V); %time step
